@@ -1,0 +1,38 @@
+{
+    "background": {
+        "persistent": true,
+        "scripts": ["js/background.js"]
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://10minutemail.net/m/*"],
+            "js": ["js/jquery.min.js", "js/content-tempmail.js"]
+        }
+    ],
+    "author": "Karson",
+    "browser_action": {
+        "default_icon": "img/logo/icon48.png",
+        "default_popup": "popup.html"
+    },
+    "description": "Tiny tools",
+    "icons": {
+        "16": "img/logo/icon16.png",
+        "48": "img/logo/icon48.png",
+        "128": "img/logo/icon128.png"
+    },
+    "manifest_version": 2,
+    "name": "Tiny tools",
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "contextMenus",
+        "http://*/*",
+        "https://*/*",
+        "<all_urls>",
+        "tabs",
+        "*://*/*",
+        "clipboardWrite",
+        "clipboardRead"],
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "version": "1.0.1"
+}
