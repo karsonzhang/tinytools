@@ -1,4 +1,8 @@
 
+var st;
+var url;
+var clipboard = {type: "", content: "", url: ""};
+
 var utf8text = function (text) {
     text = String(text).replace(
             /[\u0080-\u07ff]/g,
@@ -62,6 +66,9 @@ var buildqrcode = function (qrtext) {
 var copy = function (str) {
     var sandbox = $('#sandbox').val(str).select();
     document.execCommand('copy');
+    clipboard.type = "text";
+    clipboard.content = sandbox;
+    clipboard.url = "";
     sandbox.val('');
 };
 

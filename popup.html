@@ -29,7 +29,7 @@
                 <div class="form-group">
 
                     <label class="radio radio-inline">
-                        <input type="radio" name="type" value="qrcode" data-select="auto" data-toggle="radio" checked="checked" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                        <input type="radio" name="type" value="qrcode" data-select="auto|qrencode|qrdecode" data-toggle="radio" checked="checked" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
                         二维码
                     </label>
 
@@ -44,20 +44,19 @@
                     </label>
 
                     <label class="radio radio-inline">
-                        <input type="radio" name="type" value="url" data-select="auto|urlencode|urldecode" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                        <input type="radio" name="type" value="format" data-select="auto|json|javascript|html|xml|css|sql" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                        格式化
+                    </label>
+
+                    <label class="radio radio-inline">
+                        <input type="radio" name="type" value="url" data-select="auto|urlencode|urldecode|uniencode|unidecode" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
                         URL编码
                     </label>
 
                     <label class="radio radio-inline">
-                        <input type="radio" name="type" value="unicode" data-select="auto|uniencode|unidecode" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-                        Unicode
-                    </label>
-
-                    <label class="radio radio-inline">
                         <input type="radio" name="type" value="base64" data-select="auto|base64encode|base64decode" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-                        Base64
+                        Base64编码
                     </label>
-
                     <textarea name="input" id="inputtext" class="form-control" cols="30" rows="5" placeholder="输入"></textarea>
                     <div class="row" style="margin:20px -15px;">
                         <div class="col-xs-3">
@@ -90,6 +89,8 @@
         <script src="js/jquery.endecode.js"></script>
         <script src="js/jquery.qrcode.js"></script>
         <script src="js/common.js"></script>
+        <script src="js/jsbeautify.js"></script>
+        <script src="js/cssbeautify.js"></script>
         <script src="js/popup.js"></script>
     </body>
 </html>
