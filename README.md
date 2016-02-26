@@ -12,7 +12,7 @@ Tiny tools(迷你工具)是一个Chrome的扩展，其中包含了很多有用�
 5. 支持Urlencode、Urldecode、Uniencode、Unidecode
 
 ##插件下载
-[CRX文件下载](http://http://git.oschina.net/karson/tinytools/attach_files)
+[CRX文件下载](https://github.com/karsonzhang/tinytools/releases)
 
 ##运行截图
 ![二维码生成](http://git.oschina.net/uploads/images/2015/1224/144933_aed7db34_10933.png "二维码生成")
