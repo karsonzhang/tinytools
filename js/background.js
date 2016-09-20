@@ -36,10 +36,27 @@ var onInstallHandler = function () {
 var onBeforeRequestHandler = function (details) {
     var url = details.url;
     var domain = url.match(/^(http|https)\:\/\/([a-zA-Z0-9\.\-])+/g);
-    var judge = domain && domain[0].match(/googleapis/g);
+    var judge = false;
+    var replaceobj = {
+        'fonts.googleapis.com': 'fonts.lug.ustc.edu.cn',
+        'ajax.googleapis.com': 'ajax.lug.ustc.edu.cn',
+        'themes.googleusercontent.com': 'google-themes.lug.ustc.edu.cn',
+        'fonts.gstatic.com': 'fonts-gstatic.lug.ustc.edu.cn',
+        'www.gravatar.com': 'gravatar.lug.ustc.edu.cn'
+    };
+    var search = "";
+    for (var key in replaceobj) {
+        if (replaceobj.hasOwnProperty(key)) {
+            judge = domain && domain[0].indexOf(key) > -1;
+            if (judge) {
+                search = key;
+                break;
+            }
+        }
+    }
 
     if (judge) {
-        url = url.replace(/^https/, 'http').replace('googleapis', 'useso');
+        url = url.replace(search, replaceobj[search]);
         return {redirectUrl: url};
     }
 };
@@ -48,5 +65,5 @@ var onBeforeRequestHandler = function (details) {
 chrome.contextMenus.onClicked.addListener(onClickHandler);
 //添加事件
 chrome.runtime.onInstalled.addListener(onInstallHandler);
-//替换GoogleAPI
+//替换GoogleAPI https://servers.blog.ustc.edu.cn/2015/09/google-revproxy-add-cache/
 chrome.webRequest.onBeforeRequest.addListener(onBeforeRequestHandler, {urls: ["<all_urls>"]}, ["blocking"]);

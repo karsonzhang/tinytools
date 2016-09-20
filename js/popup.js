@@ -52,27 +52,48 @@ $(function () {
                             "color": "#3a3",
                             "text": utf8text(inputtext)
                         });
+                        if ($("#url").val().match(/taobao|tmall/)) {
+                            $('<a class="btn btn-danger btn-block btn-alimama" href="http://pub.alimama.com/myunion.htm?spm=a2320.7388781.a214tr8.d006.0E1Me6#!/promo/self/items?q=' + encodeURIComponent($("#url").val()) + '" target="_blank">阿里妈妈推广</a>').prependTo("#qrcode");
+                        }
                     }
                     break;
                 case "url":
+                    var tounicode = function (text) {
+                        console.log(text);
+                        var result = "";
+                        for (var i = 0; i < text.length; i++) {
+                            var partial = text[i].charCodeAt(0).toString(16);
+                            while (partial.length !== 4)
+                                partial = "0" + partial;
+                            result += "\\u" + partial;
+                        }
+                        return result;
+                    };
                     if (mode == 'auto') {
                         if (inputtext.match(/^[0-9a-zA-Z\-_\*%\.]+$/)) {
                             mode = 'urldecode';
+                        } else if (inputtext.match(/^\\u[0-9a-fA-F]{4}(.*)/)) {
+                            mode = 'unidecode';
                         } else {
                             mode = 'urlencode';
                         }
                     }
-                    result = mode == 'urlencode' ? encodeURIComponent(inputtext) : decodeURIComponent(inputtext);
-                    break;
-                case "unicode":
-                    if (mode == 'auto') {
-                        if (inputtext.match(/^\\u[0-9a-fA-F]{4}(.*)/)) {
-                            mode = 'unidecode';
-                        } else {
-                            mode = 'uniencode';
-                        }
+                    switch (mode) {
+                        case "urlencode":
+                            result = encodeURIComponent(inputtext);
+                            break;
+                        case "urldecode":
+                            result = decodeURIComponent(inputtext);
+                            break;
+                        case "uniencode":
+                            result = tounicode(inputtext);
+                            break;
+                        case "unidecode":
+                            result = unescape(JSON.parse('"' + inputtext + '"'));
+                            break;
+                        default:
+                            result = inputtext;
                     }
-                    result = mode == 'uniencode' ? $.endecode.uniEncode(inputtext) : $.endecode.uniDecode(inputtext);
                     break;
                 case "timestamp":
                     if (inputtext.length == 0 || inputtext.match(/^[0-9]{10,13}$/)) {
@@ -128,28 +149,46 @@ $(function () {
                         clearTimeout(st);
                         st = setTimeout(function () {
                             var from = "auto";
-                            var to = "en";
+                            var to = "auto";
+                            if (/.*[\u4e00-\u9fa5]+.*$/.test(inputtext)) {
+                                to = "en";
+                            }
                             if (mode !== 'auto') {
                                 var arr = mode.split('-');
                                 from = arr[0];
                                 to = arr[1];
                             }
-                            if (inputtext.match(/^[a-zA-Z\s]+$/)) {
-                                from = "en";
-                                to = "zh";
-                            }
+                            to = to == "zh" ? "zh-CN" : to;
+                            var data = {
+                                client: "gtx",
+                                sl: from,
+                                tl: to,
+                                hl: "zh-CN",
+                                dj: 1,
+                                source: "icon",
+                                q: inputtext
+                            };
                             $.ajax({
-                                url: "http://apistore.baidu.com/microservice/translate",
-                                data: {query: inputtext, from: from, to: to},
-                                dataType: 'json',
+                                url: "https://translate.google.cn/translate_a/single?dt=t&dt=bd",
+                                data: data,
                                 success: function (ret) {
-                                    result = ret.retData.trans_result[0].dst;
+                                    if (ret.sentences) {
+                                        var arr = new Array();
+                                        $.each(ret.sentences, function (i, j) {
+                                            arr.push(j.trans);
+                                        });
+                                        result = arr.join('');
+                                    } else if (ret.dict) {
+                                        result = ret.dict[0].terms.join(",");
+                                    } else {
+                                        result = "无法翻译";
+                                    }
                                     outputobj.val(result);
                                 }, error: function (ret) {
                                     result = "unknown format";
                                 }
                             });
-                        }, 250);
+                        }, 500);
                     }
                     break;
                 case "format":
@@ -211,7 +250,8 @@ $(function () {
                     outputobj.val(inputtext);
                     break;
             }
-        } catch (exception) {
+        } catch (e) {
+            console.log(e);
             result = "An error occurred:" + e.message;
         }
         outputobj.val(result);
@@ -289,21 +329,22 @@ $(function () {
         currentWindow: true,
         active: true
     },
-    function (tab) {
-        url = tab[0].url;
-        $("input[name=type][value=qrcode]").attr("checked", "checked");
-        var inputtext = $("#inputtext");
-        if (pastetext.match(/^[0-9]{10,13}$/)) {
-            $("input[name=type][value=timestamp]").attr("checked", "checked");
-            inputtext.val(pastetext).focus();
-        } else if (clipboard.type == "text") {
-            if (($.trim(pastetext).length == 0 || !pastetext.match(/^[a-zA-Z0-9]{6,10}$/)) && url.match(/^((https|http|ftp)?:\/\/)(.*)/)) {
-                pastetext = url;
-            }
-            inputtext.val(pastetext).focus();
-            $("input[name=type][value=qrcode]").attr("checked", "checked");
-        }
-        $("input[name=type]:checked").click();
-    });
+            function (tab) {
+                url = tab[0].url;
+                $("input[name=type][value=qrcode]").attr("checked", "checked");
+                var inputtext = $("#inputtext");
+                if (pastetext.match(/^[0-9]{10,13}$/)) {
+                    $("input[name=type][value=timestamp]").attr("checked", "checked");
+                    inputtext.val(pastetext).focus();
+                } else if (clipboard.type == "text") {
+                    $("#url").val(url);
+                    if (($.trim(pastetext).length == 0 || !pastetext.match(/^[a-zA-Z0-9]{6,10}$/)) && url.match(/^((https|http|ftp)?:\/\/)(.*)/)) {
+                        pastetext = url;
+                    }
+                    inputtext.val(pastetext).focus();
+                    $("input[name=type][value=qrcode]").attr("checked", "checked");
+                }
+                $("input[name=type]:checked").click();
+            });
 
 });
