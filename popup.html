@@ -26,6 +26,7 @@
                 <h6>Tiny tools</h6>
             </div>
             <form action="">
+                <input type="hidden" name="url" id="url"/>
                 <div class="form-group">
 
                     <label class="radio radio-inline">
@@ -68,16 +69,16 @@
                             </select>
                         </div>
                         <div class="col-xs-3">
-                            <a href="javascript:;" id="truncate" class="btn btn-sm  btn-block btn-default col-sm-5">清空</a>
+                            <a href="javascript:;" id="truncate" class="btn btn-sm btn-block btn-default col-sm-5">清空</a>
                         </div>
                         <div class="col-xs-3">
-                            <a href="javascript:;" id="copy" class="btn btn-sm  btn-block btn-default col-sm-5">复制结果</a>
+                            <a href="javascript:;" id="copy" class="btn btn-sm btn-block btn-default col-sm-5">复制结果</a>
                         </div>
                     </div>
                     <textarea name="input" id="outputtext" class="form-control" cols="30" rows="5" placeholder="输出"></textarea>
                     <div id="qrcode"></div>
                 </div>
-                <textarea id="sandbox"></textarea>
+                <textarea id="sandbox" maxlength="100"></textarea>
             </form>
         </div>
         <!-- /.container -->

@@ -4,10 +4,6 @@
         "scripts": ["js/background.js"]
     },
     "content_scripts": [
-        {
-            "matches": ["*://10minutemail.net/m/*"],
-            "js": ["js/jquery.min.js", "js/content-tempmail.js"]
-        }
     ],
     "author": "Karson",
     "browser_action": {
